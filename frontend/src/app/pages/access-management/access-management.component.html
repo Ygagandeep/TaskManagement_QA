@@ -1,0 +1,26 @@
+    <div class="page-head"><div><p class="eyebrow">Security</p><h1>Access Management</h1><p class="muted">Configure page-level access for each user.</p></div><button class="btn" (click)="load()" [disabled]="loading">{{ loading ? 'Loading...' : 'Refresh' }}</button></div>
+    <div *ngIf="message" class="message success">{{ message }}</div>
+    <div *ngIf="error" class="message error">{{ error }}</div>
+    <div class="toolbar"><div class="field"><label>Search</label><input [(ngModel)]="search" placeholder="Search by name or email..." /></div><button class="btn secondary" (click)="search=''">Clear</button></div>
+    <div class="card">
+      <table class="access-table">
+        <tr><th>User</th><th *ngFor="let col of columns">{{ col.label }}</th></tr>
+        <tr *ngFor="let row of filtered">
+          <td><strong>{{ row.user.name }}</strong><br><span class="muted">{{ row.user.email }}</span><br><span class="badge">{{ row.user.role }}</span></td>
+          <td *ngFor="let col of columns">
+            <button
+              type="button"
+              class="switch"
+              [class.on]="isOn(row, col.key)"
+              [class.locked]="isLocked(row, col.key)"
+              [class.saving]="savingUserId === row.user._id"
+              [attr.aria-label]="col.label + ' access for ' + row.user.name"
+              [title]="lockText(row, col.key)"
+              (click)="toggle(row, col.key)"
+              [disabled]="isLocked(row, col.key) || savingUserId === row.user._id">
+            </button>
+          </td>
+        </tr>
+      </table>
+      <p *ngIf="!loading && filtered.length === 0" class="muted empty-state">No users found.</p>
+    </div>

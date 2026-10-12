@@ -1,0 +1,42 @@
+    <div class="page-head">
+      <div><p class="eyebrow">People</p><h1>Employee Management</h1><p class="muted">Manage registered employees, role, and active status.</p></div>
+      <div class="actions"><button class="btn" (click)="showAdd=true">+ Add Employee</button><button class="btn secondary" (click)="load()">Refresh Employees</button></div>
+    </div>
+    <div class="grid cards">
+      <div class="card metric"><span class="metric-icon">T</span><div><span class="muted">Total Employees</span><strong>{{ employees.length }}</strong></div></div>
+      <div class="card metric"><span class="metric-icon">A</span><div><span class="muted">Active</span><strong>{{ count('active') }}</strong></div></div>
+      <div class="card metric"><span class="metric-icon">I</span><div><span class="muted">Inactive</span><strong>{{ count('inactive') }}</strong></div></div>
+      <div class="card metric"><span class="metric-icon">M</span><div><span class="muted">Administrators</span><strong>{{ admins }}</strong></div></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <div class="toolbar">
+        <div class="field"><label>Search Employees</label><input [(ngModel)]="filters.search" (input)="load()" /></div>
+        <div class="field"><label>Role</label><select [(ngModel)]="filters.role" (change)="load()"><option value="all">All</option><option value="admin">Admin</option><option value="user">User</option></select></div>
+        <div class="field"><label>Status</label><select [(ngModel)]="filters.status" (change)="load()"><option value="all">All</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+        <button class="btn secondary" (click)="clear()">Clear Filters</button>
+      </div>
+      <h3>Registered Employees</h3>
+      <p class="muted" *ngIf="loading">Loading employees...</p>
+      <p class="error" *ngIf="error">{{ error }}</p>
+      <p class="muted" *ngIf="!loading && !error && employees.length === 0">No registered employees found.</p>
+      <table><tr><th>Employee</th><th>Email</th><th>Role</th><th>Status</th><th>Joined Date</th><th>Actions</th></tr>
+      <tr *ngFor="let e of employees">
+        <td><strong>{{ e.name }}</strong><br><span class="muted">{{ e.username }}</span></td><td>{{ e.email }}</td>
+        <td><select [(ngModel)]="e.role" (change)="role(e)"><option value="admin">Admin</option><option value="user">User</option></select></td>
+        <td><span class="badge" [ngClass]="e.status">{{ e.status }}</span></td><td>{{ e.joinedDate | date }}</td>
+        <td class="actions"><button class="btn secondary small" (click)="toggle(e)">{{ e.status === 'active' ? 'Disable' : 'Enable' }}</button><button class="btn danger small" (click)="remove(e)">Delete</button></td>
+      </tr></table>
+    </div>
+    <div class="modal-backdrop" *ngIf="showAdd">
+      <form class="modal" (ngSubmit)="create()">
+        <h2>Add Employee</h2>
+        <div class="form-grid">
+          <div class="field"><label>Name</label><input [(ngModel)]="form.name" name="name" required /></div>
+          <div class="field"><label>Email</label><input [(ngModel)]="form.email" name="email" type="email" required /></div>
+          <div class="field"><label>Username</label><input [(ngModel)]="form.username" name="username" required /></div>
+          <div class="field"><label>Password</label><div class="password-field"><input [(ngModel)]="form.password" name="password" [type]="showPassword ? 'text' : 'password'" required /><button type="button" class="password-toggle" [class.visible]="showPassword" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"><span class="sr-only">{{ showPassword ? 'Hide password' : 'Show password' }}</span></button></div></div>
+          <div class="field"><label>Role</label><select [(ngModel)]="form.role" name="role"><option value="user">User</option><option value="admin">Admin</option></select></div>
+        </div>
+        <div class="actions"><button class="btn">Create</button><button type="button" class="btn secondary" (click)="showAdd=false">Cancel</button></div>
+      </form>
+    </div>

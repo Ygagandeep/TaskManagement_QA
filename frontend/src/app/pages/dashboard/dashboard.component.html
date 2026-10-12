@@ -1,0 +1,74 @@
+    <div class="page-head">
+      <div><p class="eyebrow">Workspace Overview</p><h1>Dashboard</h1><p class="muted">Current project and task performance.</p></div>
+      <button class="btn secondary" (click)="load()">Refresh</button>
+    </div>
+    <p class="message error" *ngIf="error">{{ error }}</p>
+    <div class="grid cards">
+      <div class="card metric"><span class="metric-icon">P</span><div><span class="muted">Total Projects</span><strong>{{ data.totalProjects || 0 }}</strong></div></div>
+      <div class="card metric"><span class="metric-icon">T</span><div><span class="muted">Total Tasks</span><strong>{{ data.totalTasks || 0 }}</strong></div></div>
+      <div class="card metric"><span class="metric-icon">C</span><div><span class="muted">Completed Tasks</span><strong>{{ data.completedTasks || 0 }}</strong></div></div>
+      <div class="card metric"><span class="metric-icon">E</span><div><span class="muted">Employees</span><strong>{{ data.totalEmployees || 0 }}</strong></div></div>
+    </div>
+    <div class="grid two" style="margin-top:18px">
+      <div class="card summary-chart-card">
+        <div class="chart-title-row">
+          <h3>Task Status</h3>
+          <span class="badge">{{ taskStatusTotal }} total</span>
+        </div>
+        <div class="summary-chart-layout">
+          <div class="mini-chart-wrap">
+            <canvas id="taskStatusChart"></canvas>
+            <div class="chart-center">
+              <strong>{{ taskStatusTotal }}</strong>
+              <span>Tasks</span>
+            </div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-row pending" *ngFor="let item of taskStatusRows">
+              <span class="legend-dot" [ngClass]="statusClass(item._id)"></span>
+              <span>{{ item._id }}</span>
+              <strong>{{ item.count }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card summary-chart-card">
+        <div class="chart-title-row">
+          <h3>Project Progress</h3>
+          <span class="badge">{{ projectProgressTotal }} total</span>
+        </div>
+        <div class="summary-chart-layout">
+          <div class="mini-chart-wrap">
+            <canvas id="projectProgressChart"></canvas>
+            <div class="chart-center">
+              <strong>{{ projectProgressTotal }}</strong>
+              <span>Projects</span>
+            </div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-row" *ngFor="let item of projectProgressRows">
+              <span class="legend-dot" [ngClass]="statusClass(item._id)"></span>
+              <span>{{ item._id }}</span>
+              <strong>{{ item.count }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <div class="chart-title-row">
+        <h3>Weekly Completed Tasks</h3>
+        <span class="badge active" *ngIf="hasWeeklyCompletedData">{{ data.completedTasks || 0 }} completed</span>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="weeklyChart"></canvas>
+        <div class="chart-empty" *ngIf="!hasWeeklyCompletedData">
+          <strong>No completed tasks this week yet</strong>
+          <span>Once a task is moved to Completed, the bars will appear here.</span>
+        </div>
+      </div>
+    </div>
+    <div class="grid two" style="margin-top:18px">
+      <div class="card"><h3>Recent Projects</h3><table><tr><th>Project</th><th>Status</th></tr><tr *ngFor="let p of data.recentProjects"><td>{{ p.projectName }}</td><td><span class="badge">{{ p.status }}</span></td></tr></table></div>
+      <div class="card"><h3>Recent Tasks</h3><table><tr><th>Task</th><th>Priority</th><th>Status</th></tr><tr *ngFor="let t of data.recentTasks"><td>{{ t.taskTitle }}</td><td><span class="badge" [ngClass]="t.priority?.toLowerCase()">{{ t.priority }}</span></td><td><span class="badge" [ngClass]="statusClass(t.status)">{{ t.status }}</span></td></tr></table></div>
+    </div>

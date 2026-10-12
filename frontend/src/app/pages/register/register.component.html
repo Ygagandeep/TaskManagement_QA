@@ -1,0 +1,47 @@
+    <div class="auth-page">
+      <form class="auth-card" #registerForm="ngForm" (ngSubmit)="register(registerForm)">
+        <p class="eyebrow">First Time User</p>
+        <h1>Create Account</h1>
+        <p class="muted">The first registered account becomes admin.</p>
+        <p class="message error" *ngIf="error">{{ error }}</p>
+        <p class="message success" *ngIf="success">{{ success }}</p>
+        <div class="field">
+          <label>Full Name</label>
+          <input name="name" [(ngModel)]="form.name" #name="ngModel" required minlength="2" [class.invalid]="isInvalid(name)" />
+          <small class="field-error" *ngIf="isInvalid(name)">Full name is required.</small>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input name="email" type="email" [(ngModel)]="form.email" #email="ngModel" required email [class.invalid]="isInvalid(email)" />
+          <small class="field-error" *ngIf="isInvalid(email)">Valid email is required.</small>
+        </div>
+        <div class="field">
+          <label>Username</label>
+          <input name="username" [(ngModel)]="form.username" #username="ngModel" required minlength="3" [class.invalid]="isInvalid(username)" />
+          <small class="field-error" *ngIf="isInvalid(username)">Username is required, minimum 3 characters.</small>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="password-field">
+            <input name="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="form.password" #password="ngModel" required minlength="6" [class.invalid]="isInvalid(password)" />
+            <button type="button" class="password-toggle" [class.visible]="showPassword" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+              <span class="sr-only">{{ showPassword ? 'Hide password' : 'Show password' }}</span>
+            </button>
+          </div>
+          <small class="field-error" *ngIf="isInvalid(password)">Password is required, minimum 6 characters.</small>
+        </div>
+        <div class="field">
+          <label>Confirm Password</label>
+          <div class="password-field">
+            <input name="confirm" [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="confirm" #confirmPassword="ngModel" required [class.invalid]="isInvalid(confirmPassword) || passwordMismatch" />
+            <button type="button" class="password-toggle" [class.visible]="showConfirmPassword" (click)="showConfirmPassword = !showConfirmPassword" [attr.aria-label]="showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'">
+              <span class="sr-only">{{ showConfirmPassword ? 'Hide confirm password' : 'Show confirm password' }}</span>
+            </button>
+          </div>
+          <small class="field-error" *ngIf="isInvalid(confirmPassword)">Confirm password is required.</small>
+          <small class="field-error" *ngIf="passwordMismatch">Passwords do not match.</small>
+        </div>
+        <button class="btn" style="width:100%" [disabled]="loading">{{ loading ? 'Registering...' : 'Register' }}</button>
+        <a class="btn ghost" style="display:block;text-align:center;margin-top:12px" routerLink="/login">Back to Login</a>
+      </form>
+    </div>

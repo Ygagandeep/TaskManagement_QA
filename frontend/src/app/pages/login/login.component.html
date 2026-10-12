@@ -1,0 +1,26 @@
+    <div class="auth-page">
+      <form class="auth-card" #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+        <p class="eyebrow">Task Management</p>
+        <h1>Login</h1>
+        <p class="muted">Sign in with your username and password.</p>
+        <p class="message error" *ngIf="error">{{ error }}</p>
+        <p class="message success" *ngIf="success">{{ success }}</p>
+        <div class="field">
+          <label>Username</label>
+          <input name="username" [(ngModel)]="form.username" #username="ngModel" required [class.invalid]="isInvalid(username)" />
+          <small class="field-error" *ngIf="isInvalid(username)">Username is required.</small>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="password-field">
+            <input name="password" [(ngModel)]="form.password" #password="ngModel" [type]="showPassword ? 'text' : 'password'" required [class.invalid]="isInvalid(password)" />
+            <button type="button" class="password-toggle" [class.visible]="showPassword" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+              <span class="sr-only">{{ showPassword ? 'Hide password' : 'Show password' }}</span>
+            </button>
+          </div>
+          <small class="field-error" *ngIf="isInvalid(password)">Password is required.</small>
+        </div>
+        <button class="btn" style="width:100%" [disabled]="loading">{{ loading ? 'Logging in...' : 'Login' }}</button>
+        <a class="btn ghost" style="display:block;text-align:center;margin-top:12px" routerLink="/register">Register for first time</a>
+      </form>
+    </div>

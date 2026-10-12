@@ -1,0 +1,29 @@
+    <div class="page-head"><div><p class="eyebrow">Account Configuration</p><h1>Settings</h1><p class="muted">Manage account, security, appearance, and preferences.</p></div><button class="btn secondary" (click)="load()">Refresh Settings</button></div>
+    <p class="success" *ngIf="message">{{ message }}</p>
+    <div class="grid two">
+      <div class="card"><h3>Account Information</h3><div class="form-grid"><div class="field"><label>Full Name</label><input [(ngModel)]="profile.name" /></div><div class="field"><label>Email Address</label><input [(ngModel)]="profile.email" /></div></div><button class="btn" (click)="saveProfile()">Save Profile</button></div>
+      <div class="card"><h3>Security</h3><div class="field"><label>Current Password</label><div class="password-field"><input [type]="showCurrentPassword ? 'text' : 'password'" [(ngModel)]="password.currentPassword" /><button type="button" class="password-toggle" [class.visible]="showCurrentPassword" (click)="showCurrentPassword = !showCurrentPassword" [attr.aria-label]="showCurrentPassword ? 'Hide current password' : 'Show current password'"><span class="sr-only">{{ showCurrentPassword ? 'Hide current password' : 'Show current password' }}</span></button></div></div><div class="field"><label>New Password</label><div class="password-field"><input [type]="showNewPassword ? 'text' : 'password'" [(ngModel)]="password.newPassword" /><button type="button" class="password-toggle" [class.visible]="showNewPassword" (click)="showNewPassword = !showNewPassword" [attr.aria-label]="showNewPassword ? 'Hide new password' : 'Show new password'"><span class="sr-only">{{ showNewPassword ? 'Hide new password' : 'Show new password' }}</span></button></div></div><button class="btn" (click)="changePassword()">Change Password</button></div>
+      <div class="card">
+        <h3>Appearance</h3>
+        <div class="theme-picker">
+          <button type="button" class="theme-option" [class.active]="settings.theme !== 'dark'" (click)="setTheme('light')">
+            <span class="theme-icon sun"></span>
+            <span><strong>Light Mode</strong><small>Clean bright workspace</small></span>
+          </button>
+          <button type="button" class="theme-option" [class.active]="settings.theme === 'dark'" (click)="setTheme('dark')">
+            <span class="theme-icon moon"></span>
+            <span><strong>Dark Mode</strong><small>Lower light dashboard</small></span>
+          </button>
+        </div>
+      </div>
+      <div class="card"><h3>Notification Preferences</h3><label><input type="checkbox" [(ngModel)]="settings.emailNotifications" /> Email Notifications</label><hr><label><input type="checkbox" [(ngModel)]="settings.browserNotifications" /> Browser Notifications</label><hr><label><input type="checkbox" [(ngModel)]="settings.taskReminders" /> Task Reminders</label></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h3>Preferences</h3>
+      <div class="form-grid"><div class="field"><label>Language</label><select [(ngModel)]="settings.language"><option>English</option><option>Kannada</option><option>Tamil</option><option>Hindi</option></select></div><div class="field"><label>Time Zone</label><select [(ngModel)]="settings.timeZone"><option>Asia/Kolkata</option><option>UTC</option></select></div><div class="field"><label>Date Format</label><select [(ngModel)]="settings.dateFormat"><option>DD/MM/YYYY</option><option>MM/DD/YYYY</option><option>YYYY-MM-DD</option></select></div></div>
+      <div class="actions"><button class="btn secondary" (click)="load()">Reset</button><button class="btn" (click)="save()">Save Settings</button></div>
+    </div>
+    <div class="card" style="margin-top:18px;border-color:#fecaca">
+      <h3>Danger Zone</h3><p class="muted">Delete account permanently after password confirmation.</p>
+      <div class="toolbar"><div class="field"><label>Password</label><div class="password-field"><input [type]="showDeletePassword ? 'text' : 'password'" [(ngModel)]="deletePassword" /><button type="button" class="password-toggle" [class.visible]="showDeletePassword" (click)="showDeletePassword = !showDeletePassword" [attr.aria-label]="showDeletePassword ? 'Hide password' : 'Show password'"><span class="sr-only">{{ showDeletePassword ? 'Hide password' : 'Show password' }}</span></button></div></div><button class="btn danger" (click)="deleteAccount()">Delete Account</button></div>
+    </div>

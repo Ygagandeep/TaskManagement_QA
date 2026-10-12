@@ -1,0 +1,28 @@
+    <div class="page-head"><div><p class="eyebrow">Document Management</p><h1>File Upload</h1><p class="muted">Upload, download, and manage project documents.</p></div><button class="btn secondary" (click)="load()">Refresh Files</button></div>
+    <div class="grid cards">
+      <div class="card metric"><span class="metric-icon">F</span><div><span class="muted">Total Files</span><strong>{{ files.length }}</strong></div></div>
+      <div class="card metric"><span class="metric-icon">I</span><div><span class="muted">Images</span><strong>{{ images }}</strong></div></div>
+      <div class="card metric"><span class="metric-icon">D</span><div><span class="muted">Documents</span><strong>{{ documents }}</strong></div></div>
+      <div class="card metric"><span class="metric-icon">S</span><div><span class="muted">Total Storage</span><strong>{{ storage }}</strong></div></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h3>Upload New File</h3><p class="muted">Maximum file size is 10 MB.</p>
+      <div class="field"><label>Project</label><select [(ngModel)]="project"><option value="">No project</option><option *ngFor="let p of projects" [value]="p._id">{{ p.projectName }}</option></select></div>
+      <div class="dropzone" [class.dragging]="dragging" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+        <input #fileInput type="file" hidden (change)="select($event)" />
+        <div>
+          <strong>Drag and drop your file here</strong>
+          <p class="muted">or click the button below</p>
+          <button type="button" class="btn" (click)="fileInput.click()">Choose File</button>
+        </div>
+      </div>
+      <p class="message success" *ngIf="message">{{ message }}</p>
+      <p class="message error" *ngIf="error">{{ error }}</p>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <div class="toolbar"><div class="field"><label>Search Files</label><input [(ngModel)]="search" (input)="load()" placeholder="Search by file name" /></div><div class="field"><label>File Type</label><select [(ngModel)]="type" (change)="load()"><option value="all">All files</option><option value="image">Images</option><option value="pdf">PDF</option><option value="word">Word</option></select></div><button class="btn secondary" (click)="clear()">Clear Filters</button></div>
+      <p class="muted" *ngIf="loading">Loading files...</p>
+      <p class="muted" *ngIf="!loading && !error && files.length === 0">No uploaded files found.</p>
+      <table><tr><th>File</th><th>Type</th><th>Size</th><th>Uploaded By</th><th>Action</th></tr>
+      <tr *ngFor="let f of files"><td>{{ f.originalName }}</td><td>{{ fileLabel(f.fileType) }}</td><td>{{ pretty(f.fileSize) }}</td><td>{{ f.uploadedBy?.name || 'Unknown' }}</td><td class="actions"><a class="btn small secondary" [href]="'http://localhost:5000' + f.filePath" target="_blank">Download</a><button class="btn small danger" (click)="remove(f._id)">Delete</button></td></tr></table>
+    </div>

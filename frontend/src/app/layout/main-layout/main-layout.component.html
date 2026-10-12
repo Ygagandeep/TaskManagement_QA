@@ -1,0 +1,36 @@
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand"><span class="brand-mark">TM</span><span>Task Manager</span></div>
+        <nav class="nav">
+
+
+          <!in this line when we enter the data come and itneract directly here> 
+
+
+          <a *ngFor="let item of menu" [routerLink]="item.path" routerLinkActive="active" [hidden]="!canShow(item.access)"> 
+            <span class="icon">{{ item.short }}</span><span>{{ item.label }}</span>
+            <span class="nav-badge" *ngIf="isNotifications(item) && unreadNotifications > 0">{{ unreadNotifications > 99 ? '99+' : unreadNotifications }}</span>
+          </a>
+        </nav>
+        <button class="logout" (click)="auth.logout()"><span class="icon">L</span><span>Logout</span></button>
+      </aside>
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar-user">
+            <div>
+              <strong>Welcome, {{ auth.currentUser()?.name || auth.currentUser()?.username }}</strong>
+              <span class="role-pill">{{ auth.viewRole() === 'admin' ? 'Admin View' : 'User View' }}</span>
+            </div>
+            <label class="switch-user">
+              <span>Switch User</span>
+              <select [ngModel]="auth.viewRole()" (ngModelChange)="switchRole($event)">
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+            </label>
+            <button class="btn topbar-logout small" (click)="auth.logout()">Logout</button>
+          </div>
+        </header>
+        <section class="content"><router-outlet /></section>
+      </main>
+    </div>

@@ -1,0 +1,72 @@
+ng serve
+    │
+    ▼
+Browser loads index.html
+    │
+    ▼
+main.ts runs
+    │
+    ├── bootstrapApplication(AppComponent, appConfig)
+    │       │
+    │       ├── appConfig.providers
+    │       │   ├── provideRouter(routes) ──────► Loads app.routes.ts
+    │       │   └── provideHttpClient(withInterceptors([authInterceptor]))
+    │       │
+    │       ▼
+    │   Creates AppComponent
+    │       │
+    │       ▼
+    │   AppComponent template: <router-outlet />
+    │       │
+    ▼
+Router matches URL
+    │
+    ├── /login ──────────────────► LoginComponent (PUBLIC)
+    ├── /register ───────────────► RegisterComponent (PUBLIC)
+    └── / (or any other) ────────► MainLayoutComponent (PROTECTED)
+            │
+            ├── authGuard runs
+            │   ├── isLoggedIn()? ──YES──► Continue
+            │   └── NO ──────────────► Redirect to /login
+            │
+            ▼
+    MainLayoutComponent loads
+            │
+            ├── Shows sidebar (filtered by canShow)
+            ├── Shows topbar with user info
+            ├── <router-outlet> for children
+            │
+            ▼
+    User clicks menu (e.g., /employees)
+            │
+            ├── accessGuard runs
+            │   ├── Reads route.data.accessKey = 'employeeManagement'
+            │   ├── auth.canOpen('employeeManagement')?
+            │   │   ├── YES ────────────► EmployeesComponent loads
+            │   │   └── NO ────────────► Redirect to /dashboard
+            │
+            ▼
+    EmployeesComponent loads
+            │
+            ├── ngOnInit() calls load()
+            │   ├── employeeService.list(filters)
+            │   │   ├── HttpClient GET /api/users
+            │   │   │   ├── authInterceptor adds Authorization header
+            │   │   │   └── Request to backend
+            │   │   │
+            │   │   └── Backend returns employee list
+            │   │
+            │   └── Component updates employees[] array
+            │
+            ▼
+    User interacts (create, toggle, delete)
+            │
+            ├── Component calls service method
+            │   ├── Service makes HTTP request
+            │   │   ├── Interceptor adds JWT
+            │   │   └── Backend processes
+            │   │
+            │   └── On success: load() called to refresh
+            │
+            ▼
+    UI Updates

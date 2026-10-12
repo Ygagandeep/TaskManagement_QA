@@ -1,0 +1,20 @@
+.access-table {
+  min-width: 1120px;
+}
+
+.card {
+  overflow-x: auto;
+}
+
+.switch.locked {
+  opacity: .58;
+  cursor: not-allowed;
+}
+
+.switch.saving {
+  outline: 3px solid #bfdbfe;
+}
+
+.empty-state {
+  margin: 18px 0 4px;
+}

@@ -1,0 +1,17 @@
+    <div class="page-head"><div><p class="eyebrow">Project Workspace</p><h1>Project Management</h1><p class="muted">Create projects and track their work status.</p></div></div>
+    <div class="card">
+      <form class="form-grid" (ngSubmit)="create()">
+        <div class="field"><label>Project Name</label><input [(ngModel)]="form.projectName" name="projectName" required /></div>
+        <div class="field"><label>Status</label><select [(ngModel)]="form.status" name="status"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></div>
+        <div class="field" style="grid-column:1/-1"><label>Project Description</label><textarea [(ngModel)]="form.description" name="description" required></textarea></div>
+        <button class="btn">Submit Project</button>
+      </form>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h3>Submitted Projects</h3>
+      <p class="error" *ngIf="error">{{ error }}</p>
+      <p class="muted" *ngIf="!error && projects.length === 0">No submitted projects found.</p>
+      <table><tr><th>Project</th><th>Description</th><th>Status</th><th>Action</th></tr>
+      <tr *ngFor="let p of projects"><td><strong>{{ p.projectName }}</strong></td><td>{{ p.description }}</td><td><span class="badge">{{ p.status }}</span></td><td><button class="btn danger small" (click)="remove(p._id)">Delete</button></td></tr></table>
+    </div>
+    <div class="card" style="margin-top:18px"><h3>Task Management System</h3><p class="muted">Projects marked In Progress are ready for task assignment and tracking.</p></div>

@@ -1,0 +1,8 @@
+    <div class="page-head"><div><p class="eyebrow">Updates</p><h1>Notifications</h1><p class="muted">Task, project, and employee updates.</p></div><button class="btn danger" (click)="clear()">Clear All</button></div>
+    <div class="card">
+      <p class="muted" *ngIf="loading">Loading notifications...</p>
+      <p class="error" *ngIf="error">{{ error }}</p>
+      <p class="muted" *ngIf="!loading && !error && notifications.length === 0">No notifications found.</p>
+      <table><tr><th>Message</th><th>Type</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+      <tr *ngFor="let n of notifications"><td><strong>{{ n.message }}</strong><br><span class="muted" *ngIf="n.user">For {{ n.user.name || n.user.username }}</span></td><td><span class="badge">{{ n.type }}</span></td><td><span class="badge" [class.active]="!n.isRead">{{ n.isRead ? 'Read' : 'Unread' }}</span></td><td>{{ n.createdAt | date:'medium' }}</td><td class="actions"><button class="btn small secondary" (click)="read(n._id)" [disabled]="n.isRead">Mark Read</button><button class="btn small danger" (click)="remove(n._id)">Delete</button></td></tr></table>
+    </div>
