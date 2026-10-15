@@ -5,23 +5,39 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Jenkins will fetch TaskManagement_QA from GitHub.'
+                echo 'Source code is fetched from GitHub by Jenkins.'
             }
         }
 
-        stage('Check Node and npm') {
-            steps {
+        stage('Check Tools'){
+            steps{
                 bat 'node --version'
                 bat 'npm --version'
+                bat 'git --version'
             }
         }
 
-        stage('Build Information') {
-            steps {
-                echo 'Frontend: Angular'
-                echo 'Backend: Node.js'
-                echo 'Database: MongoDB'
-                echo 'Docker deployment is already running on AWS EC2.'
+        stage('Build Frontend'){
+            steps{
+                dir('frontend') {
+                    bat 'npm ci'
+                    bat 'npm run build'
+                }
+            }
+        }
+
+        stage('Check Backend'){
+            steps{
+                dir('backend') {
+                    bat 'npm install'
+                    bat 'node --check server.js'
+                }
+            }
+        }
+
+        stage('Build summary'){
+            steps{
+                echo 'Frontend build and backend syntax check completed.'
             }
         }
     }
